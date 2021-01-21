@@ -11,6 +11,8 @@
 #include "game/manager.h"
 #include "util/stringatom.h"
 #include "renderutil/freecamerautil.h"
+#include "topdownCameraUtil.h"
+#include "topdowncamerautil.h"
 #include "game/entity.h"
 
 namespace Demo
@@ -42,6 +44,7 @@ private:
 	Game::Entity playerEntity;
 
 	RenderUtil::FreeCameraUtil freeCamUtil;
+	RenderUtil::TopdownCameraUtil topdownCamUtil;
 };
 
 } // namespace Demo
