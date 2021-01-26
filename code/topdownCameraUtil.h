@@ -23,7 +23,7 @@ namespace RenderUtil
         TopdownCameraUtil();
 
         /// sets up free camera
-        void Setup(const Math::point& defaultEyePos, const Math::vector& defaultEyeVec);
+        void Setup(float height, float defaultPitch, float defaultYaw);
         /// resets free camera to default values
         void Reset();
         /// updates camera matrix
@@ -57,7 +57,9 @@ namespace RenderUtil
 
     private:
         Math::point defaultEyePos;
-        Math::vector defaultEyeVec;
+        float defaultPitch;
+        float defaultYaw;
+        float height;
         Math::vec2 mouseMovement;
 
         Math::polar viewAngles;

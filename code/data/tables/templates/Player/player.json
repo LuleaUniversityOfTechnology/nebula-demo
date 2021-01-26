@@ -5,11 +5,16 @@
         "PlayerInput": {
             "hasFocus": true
         },
-        "Camera": {
-            "fieldOfView": 90.0,
-            "projectionMode": "PERSPECTIVE",
-            "zNear": 0.01,
-            "zFar": 1000.0
-        }
+      "Camera": {
+        "fieldOfView": 90.0,
+        "projectionMode": "PERSPECTIVE",
+        "zNear": 0.01,
+        "zFar": 1000.0
+      },
+      "TopdownCamera": {
+        "yaw": 0,
+        "pitch": -1,
+        "height": 10
+      }
     }
 }

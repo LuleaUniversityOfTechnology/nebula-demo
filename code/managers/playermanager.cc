@@ -14,6 +14,7 @@
 #include "input/mouse.h"
 #include "renderutil/mouserayutil.h"
 #include "game/api.h"
+#include "properties/input.h"
 
 namespace Demo
 {
@@ -66,13 +67,14 @@ PlayerManager::OnActivate()
     Singleton->playerEntity = Game::CreateEntity(playerCreateInfo);
 
     GraphicsFeature::Camera camera = Game::GetProperty<GraphicsFeature::Camera>(Singleton->playerEntity, Game::GetPropertyId("Camera"_atm));
+    Demo::TopdownCamera topdownCamera = Game::GetProperty< Demo::TopdownCamera>(Singleton->playerEntity, Game::GetPropertyId("TopdownCamera"_atm));
     camera.aspectRatio = (float)width / (float)height;
     camera.viewHandle = GraphicsFeature::GraphicsFeatureUnit::Instance()->GetDefaultViewHandle();
     Game::SetProperty<GraphicsFeature::Camera>(Singleton->playerEntity, Game::GetPropertyId("Camera"_atm), camera);
 
     //Singleton->freeCamUtil.Setup({0, 2, -3}, {0,0,-1});
 
-    Singleton->topdownCamUtil.Setup({0, 2, -3}, {0, 0, -1});
+    Singleton->topdownCamUtil.Setup(topdownCamera.height,topdownCamera.pitch, topdownCamera.yaw);
 
     GraphicsFeature::GraphicsFeatureUnit::Instance()->AddRenderUICallback([]()
     {
@@ -134,7 +136,7 @@ PlayerManager::OnBeginFrame()
     }
 
     //Math::mat4 worldTransform = Game::GetProperty(Singleton->playerEntity, Game::GetPropertyId("WorldTransform"_atm));
-    Game::SetProperty<Math::mat4>(Singleton->playerEntity, Game::GetPropertyId("WorldTransform"_atm), Math::inverse(Singleton->topdownCamUtil.GetTransform()));
+    Game::SetProperty<Math::mat4>(Singleton->playerEntity, Game::GetPropertyId("WorldTransform"_atm), Singleton->topdownCamUtil.GetTransform());
 }
 
 //------------------------------------------------------------------------------

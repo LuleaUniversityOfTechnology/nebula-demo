@@ -4,6 +4,7 @@
 //------------------------------------------------------------------------------
 #include "render/stdneb.h"
 #include "topdowncamerautil.h"
+#include "io/console.h"
 
 namespace RenderUtil
 {
@@ -12,9 +13,10 @@ using namespace Math;
 //------------------------------------------------------------------------------
 /**
 */
-TopdownCameraUtil::TopdownCameraUtil() : 
-    defaultEyePos(0,0,0),
-    defaultEyeVec(0,0,1),
+TopdownCameraUtil::TopdownCameraUtil() :
+    defaultEyePos(0, 0, 0),
+    defaultPitch(-N_PI/2),
+    defaultYaw(-1),
     rotationSpeed(0.01f),
     moveSpeed(0.01f),
     cameraTransform(mat4()),
@@ -35,12 +37,14 @@ TopdownCameraUtil::TopdownCameraUtil() :
 /**
 */
 void 
-TopdownCameraUtil::Setup( const Math::point& defaultEyePos, const Math::vector& defaultEyeVec )
+TopdownCameraUtil::Setup(float height, float pitch, float yaw)
 {
     this->defaultEyePos = defaultEyePos;
-    this->defaultEyeVec = defaultEyeVec;
     this->position = this->defaultEyePos;
-    this->viewAngles.set(this->defaultEyeVec);
+    this->defaultPitch = pitch;
+    this->defaultYaw = yaw;
+    this->height = height;
+    this->viewAngles.set(this->defaultYaw, this->defaultPitch);
     this->Update();
 }
 
@@ -50,7 +54,7 @@ TopdownCameraUtil::Setup( const Math::point& defaultEyePos, const Math::vector& 
 void 
 TopdownCameraUtil::Reset()
 {
-    this->viewAngles.set(this->defaultEyeVec);
+    this->viewAngles.set(this->defaultYaw, this->defaultPitch);
     this->position = this->defaultEyePos;
     this->Update();
 }
@@ -64,9 +68,17 @@ TopdownCameraUtil::Update()
     if (this->rotateButton)
     {
         this->viewAngles.rho += this->mouseMovement.x * rotationSpeed;
+        this->viewAngles.theta += this->mouseMovement.y * rotationSpeed;
     }
 
-    mat4 xMat = rotationx(-(N_PI/2));
+    if (this->viewAngles.theta >= N_PI) {
+        this->viewAngles.theta = N_PI;
+    }
+    if (this->viewAngles.theta <= 2) {
+        this->viewAngles.theta = 2;
+    }
+
+    mat4 xMat = rotationx(this->viewAngles.theta - (N_PI * 0.5f));
     mat4 yMat = rotationy(this->viewAngles.rho);
     this->cameraTransform = xMat * yMat;
 
@@ -78,11 +90,11 @@ TopdownCameraUtil::Update()
     vec4 translation = vec4(0,0,0,0);
     if (forwardsKey)
     {
-        translation.y += currentMoveSpeed;
+        translation.z -= currentMoveSpeed;
     }
     if (backwardsKey)
     {
-        translation.y -= currentMoveSpeed;
+        translation.z += currentMoveSpeed;
     }
     if (rightStrafeKey)
     {
@@ -94,18 +106,23 @@ TopdownCameraUtil::Update()
     }
     if (upKey)
     {
-        translation.z += currentMoveSpeed;
+        this->height += currentMoveSpeed;
     }
     if (downKey)
     {
-        translation.z -= currentMoveSpeed;
+        this->height -= currentMoveSpeed;
     }
 
-    translation = this->cameraTransform * translation;
-    this->position += xyz(translation);
+    translation = rotationy(-this->viewAngles.rho) * -translation;
+    this->position.x += translation.x;
+    this->position.z += translation.z;
 
-    this->cameraTransform.position = point(this->position);
+    float hypo = -this->height / Math::cos(this->viewAngles.theta);
+
+   
+
+    IO::Console::Instance()->Print("%f", this->viewAngles.theta);
+    this->cameraTransform = Math::translation(this->position.vec) * yMat * xMat * Math::translation(0, 0, -hypo);
+
 }
-
-
 } // namespace RenderUtil
