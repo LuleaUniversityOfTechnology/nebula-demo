@@ -62,6 +62,10 @@ TopdownCameraUtil::Reset()
 //------------------------------------------------------------------------------
 /**
 */
+void TopdownCameraUtil::SetPosition(Math::point pos) {this->dest = pos;}
+//------------------------------------------------------------------------------
+/**
+*/
 void 
 TopdownCameraUtil::Update()
 {
@@ -106,23 +110,27 @@ TopdownCameraUtil::Update()
     }
     if (upKey)
     {
-        this->height += currentMoveSpeed;
+        translation.y += currentMoveSpeed;
     }
     if (downKey)
     {
-        this->height -= currentMoveSpeed;
+        translation.y -= currentMoveSpeed;
     }
 
-    translation = rotationy(-this->viewAngles.rho) * -translation;
+    translation = rotationy(-this->viewAngles.rho) * - translation;
     this->position.x += translation.x;
     this->position.z += translation.z;
+    this->position.y += translation.y;
 
     float hypo = -this->height / Math::cos(this->viewAngles.theta);
 
-   
+    if (Math::abs(Math::length3(this->dest - this->position)) > 0.5) {
+        this->position = this->position + Math::vec4(this->dest - this->position)* moveSpeed;
+    }
+    else {
+        this->dest = this->position;
+    }
 
-    IO::Console::Instance()->Print("%f", this->viewAngles.theta);
-    this->cameraTransform = Math::translation(this->position.vec) * yMat * xMat * Math::translation(0, 0, -hypo);
-
+    this->cameraTransform = Math::translation(this->position.vec) * yMat * xMat * Math::translation(0, translation.y, 0) * Math::translation(0, 0, -hypo);
 }
 } // namespace RenderUtil

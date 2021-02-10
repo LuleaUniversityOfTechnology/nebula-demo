@@ -16,6 +16,7 @@
 #include "scripting/python/pythonserver.h"
 #include "dynui/console/imguiconsole.h"
 #include "dynui/console/imguiconsolehandler.h"
+#include "pythonbindings.h"
 
 #ifdef NEBULA_EDITOR_ENABLED
 #include "editorfeature/editorfeatureunit.h"
@@ -66,6 +67,7 @@ private:
 #ifdef NEBULA_EDITOR_ENABLED
         this->editorFeatureUnit = EditorFeature::EditorFeatureUnit::Create();
         this->gameServer->AttachGameFeature(this->editorFeatureUnit);
+        Scripting::ScriptServer::Instance()->EvalFile("scripts/bootstrap.py");
 #endif
 	}
 	/// cleanup game features

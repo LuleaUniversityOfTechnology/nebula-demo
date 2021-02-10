@@ -125,7 +125,7 @@ GameStateManager::OnActivate()
         Game::SetProperty(entity, Game::GetPropertyId("WorldTransform"_atm), Math::scaling(5, 5, 5) * Math::translation({ 5, 0, 9 }));
     }
 
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 10; i++)
     {
         Game::EntityCreateInfo info;
         info.immediate = true;
@@ -134,7 +134,7 @@ GameStateManager::OnActivate()
         Game::SetProperty(entity, Game::GetPropertyId("WorldTransform"_atm), Math::rotationyawpitchroll(0.01f, 0.01f, 0.01f) * Math::translation({ 2, 5.0f + ((float)i * 1.0f), 0 }));
     }
 
-    for (size_t i = 0; i < 5; i++)
+    for (size_t i = 0; i < 10; i++)
     {
         Game::EntityCreateInfo info;
         info.immediate = true;

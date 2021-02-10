@@ -1,0 +1,6 @@
+options:
+    src_dir: data/scripts/
+    dst_dir: scripts/
+
+files:
+    - bootstrap.py

@@ -30,7 +30,6 @@ namespace RenderUtil
         void Update();
         /// gets camera transform
         const Math::mat4& GetTransform() const;
-
         /// sets the state of the rotate button
         void SetRotateButton(bool state);
         /// sets the state of the accelerate button
@@ -54,6 +53,10 @@ namespace RenderUtil
         void SetUpKey(bool state);
         /// sets the down movement key
         void SetDownKey(bool state);
+        /// sets the position
+        void SetPosition(Math::point pos);
+
+        Math::point position;
 
     private:
         Math::point defaultEyePos;
@@ -63,11 +66,11 @@ namespace RenderUtil
         Math::vec2 mouseMovement;
 
         Math::polar viewAngles;
-        Math::point position;
         Math::mat4 cameraTransform;
 
         float rotationSpeed;
         float moveSpeed;
+        Math::point dest;
 
         bool rotateButton;
         bool accelerateButton;

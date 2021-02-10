@@ -25,6 +25,11 @@ public:
 	/// Create the singleton
 	static Game::ManagerAPI Create();
 
+	Game::Entity getPlayer() { return playerEntity; }
+
+	void setCamPos(Math::point p) { topdownCamUtil.SetPosition(p); }
+
+
 	/// Destroy the singleton
 	static void Destroy();
 
